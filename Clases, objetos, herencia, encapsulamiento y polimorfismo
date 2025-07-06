@@ -1,0 +1,70 @@
+# Clase base: CuentaBancaria
+class CuentaBancaria:
+    def __init__(self, titular, saldo):
+        # Atributos privados (encapsulación)
+        self.__titular = titular
+        self.__saldo = saldo
+
+    # Método para depositar dinero
+    def depositar(self, cantidad):
+        if cantidad > 0:
+            self.__saldo += cantidad
+            print(f"Se depositaron ${cantidad}. Nuevo saldo: ${self.__saldo}")
+        else:
+            print("La cantidad a depositar debe ser positiva.")
+
+    # Método para retirar dinero
+    def retirar(self, cantidad):
+        if 0 < cantidad <= self.__saldo:
+            self.__saldo -= cantidad
+            print(f"Se retiraron ${cantidad}. Nuevo saldo: ${self.__saldo}")
+        else:
+            print("Fondos insuficientes o cantidad inválida.")
+
+    # Método para mostrar información de la cuenta
+    def mostrar_informacion(self):
+        print(f"Titular: {self.__titular}, Saldo: ${self.__saldo}")
+
+    # Getter para saldo (encapsulación)
+    def obtener_saldo(self):
+        return self.__saldo
+
+
+# Clase derivada: CuentaAhorro (hereda de CuentaBancaria)
+class CuentaAhorro(CuentaBancaria):
+    def __init__(self, titular, saldo, tasa_interes):
+        # Llamada al constructor de la clase base
+        super().__init__(titular, saldo)
+        self.__tasa_interes = tasa_interes  # Atributo específico de CuentaAhorro
+
+    # Sobrescribimos el método mostrar_informacion (polimorfismo)
+    def mostrar_informacion(self):
+        # Llamamos al método de la clase base para mostrar datos comunes
+        super().mostrar_informacion()
+        print(f"Tasa de interés: {self.__tasa_interes * 100}%")
+
+    # Método adicional para aplicar interés
+    def aplicar_interes(self):
+        saldo_actual = self.obtener_saldo()
+        interes = saldo_actual * self.__tasa_interes
+        self.depositar(interes)
+        print(f"Se aplicó un interés de ${interes}.")
+
+
+# Programa principal
+if __name__ == "__main__":
+    # Creamos una cuenta bancaria común
+    cuenta1 = CuentaBancaria("Ana Pérez", 1000)
+    cuenta1.mostrar_informacion()
+    cuenta1.depositar(500)
+    cuenta1.retirar(300)
+    cuenta1.mostrar_informacion()
+
+    print("\n---------------------------\n")
+
+    # Creamos una cuenta de ahorro
+    cuenta_ahorro = CuentaAhorro("Carlos Gómez", 2000, 0.05)
+    cuenta_ahorro.mostrar_informacion()
+    cuenta_ahorro.aplicar_interes()
+    cuenta_ahorro.retirar(1000)
+    cuenta_ahorro.mostrar_informacion()
